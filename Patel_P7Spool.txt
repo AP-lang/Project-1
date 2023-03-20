@@ -1,0 +1,414 @@
+SQL> set echo on
+SQL> set echo off
+SQL> -------------------------------------------------------------
+SQL> TTITLE LEFT '**Query 1 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Mem_num as "Member Number", Mem_Fname, Mem_Lname, Rent_Num as "Rent Number", Rent_Date as "Rent Date"
+From Membership natural join Rental
+Where (Rent_Date >= '8-OCT-19') and (Rent_date <= '15-OCT-19') 
+Order by Rent_Num;
+
+**Query 1 **    Page  1                                                               
+                                                                                      
+Member Number MEMFirstName MEMLastName Rent Number Rent Date
+------------- ------------ ----------- ----------- ---------
+          115 PHIL         FELTZINSKI         1028 08-OCT-19
+          109 CLINT        OCHOA              1029 10-OCT-19
+          120 MAX          BELLARONI          1030 08-OCT-19
+          103 CURT         KNIGHT             1031 09-OCT-19
+          104 JAMIE        MELENDEZ           1032 11-OCT-19
+          120 MAX          BELLARONI          1033 11-OCT-19
+          111 STACY        MANN               1034 11-OCT-19
+          108 MATTIE       GUY                1035 12-OCT-19
+          114 STEVE        WALLY              1036 12-OCT-19
+          107 ROSARIO      ELLIOTT            1037 12-OCT-19
+          110 LEWIS        ROSALES            1038 12-OCT-19
+          105 IVA          MCCLAIN            1039 13-OCT-19
+
+ 12 rows selected 
+
+SQL> set echo off
+SQL> -------------------------------------------------------------
+SQL> TTITLE LEFT '**Query 2 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Movie.Movie_num, Movie_Title, Vid_num
+From Movie right join Video on Movie.MOVIE_NUM = Video.MOVIE_NUM
+Where vid_indate is null
+order by movie_Title, Vid_num;
+
+**Query 2 **    Page  1                                                               
+                                                                                      
+ Movie Number Movie Title             Video Number
+------------- -------------------- ---------------
+         1255 American Hustler               62008
+         1262 As Astra                       73011
+         1260 Captain Marvel                 72011
+         1252 French Kiss                    62003
+         1265 Hustlers                       75011
+         1237 Men in Black                   44392
+         1236 Richard Goodhope               34366
+         1254 Silver Linings, Play           62000
+         1235 Smokey Mountain Wild           34341
+         1250 The Hunger Games               62002
+         1238 The Shooter                    54325
+
+ 11 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 3 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select DISTINCT Mem_State
+From Membership
+Order by Mem_State;
+
+**Query 3 **    Page  1                                                               
+                                                                                      
+State
+-----
+KY   
+OH   
+TN   
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 4 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Movie_num, Movie_title, Movie_Cost, Movie_Genre, Price_code, Movie_Year
+from Movie
+Where Movie_cost > 20 and MOVIE_GENRE in ('COMEDY', 'FAMILY', 'DRAMA') and price_code is not null
+Order by Movie_genre, Movie_title;
+
+**Query 4 **    Page  1                                                               
+                                                                                      
+ Movie Number Movie Title            Movie cost MovieGenre   Price Code Movie Year
+------------- -------------------- ------------ ------------ ---------- ----------
+         1242 An American in Paris         $100 COMEDY                3       1951
+         1265 Hustlers                      $25 COMEDY                2       2019
+         1264 Instant Family                $25 COMEDY                1       2018
+         1237 Men in Black                  $30 COMEDY                2       2009
+         1240 The Russians are Com          $55 COMEDY                4       1968
+         1236 Richard Goodhope              $23 DRAMA                 2       2010
+         1254 Silver Linings, Play          $25 DRAMA                 1       2012
+         1239 Where Hope Dies               $25 DRAMA                 3       2000
+
+ 8 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 5 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Movie_Title, Movie_Genre, Movie_Year, Movie_cost
+From Movie 
+Where Movie_Title LIKE '%Hustler%'
+Order by Movie_title ASC;
+
+**Query 5 **    Page  1                                                               
+                                                                                      
+Movie Title          MovieGenre   Movie Year   Movie cost
+-------------------- ------------ ---------- ------------
+American Hustler     ACTION             2013          $30
+Hustlers             COMEDY             2019          $25
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 6 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Mem_num, Mem_Fname, Mem_Lname, Count(rent_num) as "RentalCount"
+from membership natural join Rental
+group by Mem_num, Mem_Fname, Mem_Lname
+order by Mem_num;
+
+**Query 6 **    Page  1                                                               
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName Rental Count
+---------- ------------ ----------- ------------
+       102 TAMI         DAWSON                 1
+       103 CURT         KNIGHT                 4
+       104 JAMIE        MELENDEZ               2
+       105 IVA          MCCLAIN                3
+       107 ROSARIO      ELLIOTT                3
+       108 MATTIE       GUY                    2
+       109 CLINT        OCHOA                  2
+       110 LEWIS        ROSALES                2
+       111 STACY        MANN                   3
+       114 STEVE        WALLY                  7
+       115 PHIL         FELTZINSKI             6
+       120 MAX          BELLARONI              4
+
+ 12 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 7 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Membership.Mem_num, Mem_Fname, Mem_Lname, Count(rent_num) as "RentalCount"
+from membership left join Rental on Membership.Mem_num = Rental.Mem_num
+group by Membership.Mem_num, Mem_Fname, Mem_Lname
+order by Membership.Mem_num;
+
+**Query 7 **    Page  1                                                               
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName Rental Count
+---------- ------------ ----------- ------------
+       102 TAMI         DAWSON                 1
+       103 CURT         KNIGHT                 4
+       104 JAMIE        MELENDEZ               2
+       105 IVA          MCCLAIN                3
+       106 MIRANDA      NOGO                   0
+       107 ROSARIO      ELLIOTT                3
+       108 MATTIE       GUY                    2
+       109 CLINT        OCHOA                  2
+       110 LEWIS        ROSALES                2
+       111 STACY        MANN                   3
+       112 LUIS         TRUJILLO               0
+       113 EZEKIAL      ELIOT                  0
+       114 STEVE        WALLY                  7
+       115 PHIL         FELTZINSKI             6
+       120 MAX          BELLARONI              4
+
+ 15 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 8 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Membership.mem_num, Mem_Fname, Mem_Lname
+from Membership left Join Rental on Membership.Mem_num = Rental.Mem_num
+Where Rent_num is null
+Order by Mem_Lname;
+
+**Query 8 **    Page  1                                                               
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName
+---------- ------------ -----------
+       113 EZEKIAL      ELIOT      
+       106 MIRANDA      NOGO       
+       112 LUIS         TRUJILLO   
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 9 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select count(mem_num) as "CountMems", round(avg(mem_balance),2) as "AvgBalance"
+From membership;
+
+**Query 9 **    Page  1                                                               
+                                                                                      
+ Count Members Avg Balance
+-------------- -----------
+            15        22.6
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 10 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select movie_genre, count(movie_num) as "MovieCount", round(avg(Movie_cost),2) as "AVGMovieCost"
+From movie
+Group by Movie_genre
+order by Movie_genre;
+
+**Query 10 **    Page  1                                                              
+                                                                                      
+MovieGenre    Count Movies Avg Movie Cost
+------------ ------------- --------------
+ACTION                   6            $20
+COMEDY                   6            $42
+DRAMA                    5            $25
+FAMILY                   2             $8
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 11 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Movie_Genre, Count(Vid_num) as "VideoCount"
+from Movie natural join Video
+group by Movie_genre
+order by Movie_Genre;
+
+**Query 11 **    Page  1                                                              
+                                                                                      
+MovieGenre     Count Video
+------------ -------------
+ACTION                  15
+COMEDY                  14
+DRAMA                   14
+FAMILY                   1
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 12 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Movie_genre, Count(Rent_num) as "RentCount"
+from Movie natural join video left join DetailRental on Video.Vid_num = DetailRental.Vid_num
+group by Movie_genre
+order by Movie_genre;
+
+**Query 12 **    Page  1                                                              
+                                                                                      
+MovieGenre        Count Rent
+------------ ---------------
+ACTION                    25
+COMEDY                    19
+DRAMA                     25
+FAMILY                     0
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 13 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select count(Movie_num) as "moviecount" , Sum(Movie_cost) as "MovieCost", Avg(movie_cost) as "AvgMovieCost", min(movie_cost) as "MinCost", Max(Movie_cost) as "MaxCost"
+from movie;
+
+**Query 13 **    Page  1                                                              
+                                                                                      
+ Count Movies  Movie Cost Avg Movie Cost     Min Cost     Max Cost
+------------- ----------- -------------- ------------ ------------
+           19      516.49            $27           $5         $100
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 14 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Mem_num, Mem_Fname, Mem_Lname, Sum(Detail_Fee) as "DetailFee"
+From membership natural join Rental inner join detailRental on Rental.Rent_Num = DetailRental.Rent_Num
+Group by mem_num, Mem_Fname, Mem_Lname
+order by sum(detail_Fee) desc;
+
+**Query 14 **    Page  1                                                              
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName   Detail Fee
+---------- ------------ ----------- ------------
+       114 STEVE        WALLY                $45
+       115 PHIL         FELTZINSKI           $35
+       103 CURT         KNIGHT               $29
+       111 STACY        MANN                 $18
+       120 MAX          BELLARONI            $16
+       107 ROSARIO      ELLIOTT              $14
+       110 LEWIS        ROSALES              $12
+       105 IVA          MCCLAIN              $10
+       108 MATTIE       GUY                  $10
+       104 JAMIE        MELENDEZ              $9
+       109 CLINT        OCHOA                 $9
+       102 TAMI         DAWSON                $5
+
+ 12 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 15 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select  Mem_num, Mem_Fname,  Mem_Lname,  rental.Rent_num, Detail_DailyLateFee, (Detail_ReturnDate - Detail_DueDate ) as "DaysLate", ( Detail_ReturnDate - Detail_DueDate ) * (Detail_DailyLateFee) as "LateCharges"
+From membership  natural join Rental left outer join detailRental on Rental.Rent_Num = DetailRental.Rent_Num
+Where (Detail_ReturnDate - Detail_DueDate ) is not null and (Detail_DueDate - Detail_ReturnDate) < 0
+group by Mem_num, Mem_Fname, Mem_Lname, Rental.Rent_num, Detail_DailyLateFee, Detail_ReturnDate, Detail_DueDate
+order by Mem_Lname asc, Rent_num asc;
+
+**Query 15 **    Page  1                                                              
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName RentNumber DailyLateFee DaysLate LateCharge
+---------- ------------ ----------- ---------- ------------ -------- ----------
+       107 ROSARIO      ELLIOTT           1016            3        1         $3
+       115 PHIL         FELTZINSKI        1019            3        3         $9
+       115 PHIL         FELTZINSKI        1026            3        4        $12
+       108 MATTIE       GUY               1035            3        1         $3
+       105 IVA          MCCLAIN           1008            3       13        $39
+       104 JAMIE        MELENDEZ          1032            3        2         $6
+       110 LEWIS        ROSALES           1004            1        1         $1
+       114 STEVE        WALLY             1018            3        1         $3
+       114 STEVE        WALLY             1020            3        1         $3
+       114 STEVE        WALLY             1025            3        4        $12
+       114 STEVE        WALLY             1036            3        1         $3
+
+ 11 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 16 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select mem_num, Mem_fname, mem_lname, count(Vid_num) as "VideoCount"
+from membership natural join rental natural join DetailRental natural join video 
+having count(Vid_num) > 6
+group by mem_num, Mem_fname, mem_lname
+
+order by  count(vid_num) desc;
+
+**Query 16 **    Page  1                                                              
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName   Count Video
+---------- ------------ ----------- -------------
+       114 STEVE        WALLY                  15
+       115 PHIL         FELTZINSKI             11
+       103 CURT         KNIGHT                  9
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 17 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select price_code, Price_description, Movie_Genre, sum(Detail_fee)as "TotalFees"
+From movie natural join Video natural join DetailRental natural join Price
+where Price_code in ('1' , '2')
+having sum(Detail_fee) > 20
+group by Price_code, Price_description, Movie_genre
+order by price_code, Movie_genre;
+
+**Query 17 **    Page  1                                                              
+                                                                                      
+Price Code Price Description    MovieGenre     Total Fees
+---------- -------------------- ------------ ------------
+         1 Standard             ACTION                $60
+         1 Standard             COMEDY                $25
+         1 Standard             DRAMA                 $30
+         2 New Release          COMEDY                $35
+         2 New Release          DRAMA                 $33
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 18 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select mem_num, Mem_fname, mem_lname, count( distinct Rent_date) as "CountRent", count(vid_num) as "VideoCount", Count( distinct Movie_genre) as "CountGenre"
+from membership natural join rental natural join DetailRental natural join video natural join Movie
+group by mem_num, Mem_fname, mem_lname
+order by mem_lname;
+
+**Query 18 **    Page  1                                                              
+                                                                                      
+ MEMNumber MEMFirstName MEMLastName CountRent   Count Video CountGenre
+---------- ------------ ----------- --------- ------------- ----------
+       120 MAX          BELLARONI           4             5          2
+       102 TAMI         DAWSON              1             3          2
+       107 ROSARIO      ELLIOTT             3             5          3
+       115 PHIL         FELTZINSKI          4            11          3
+       108 MATTIE       GUY                 2             3          2
+       103 CURT         KNIGHT              4             9          3
+       111 STACY        MANN                3             5          3
+       105 IVA          MCCLAIN             3             3          2
+       104 JAMIE        MELENDEZ            2             3          2
+       109 CLINT        OCHOA               2             3          2
+       110 LEWIS        ROSALES             2             4          3
+       114 STEVE        WALLY               5            15          3
+
+ 12 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> ----------------------------------------------------
+SQL> SPOOL OFF

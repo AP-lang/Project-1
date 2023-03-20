@@ -1,0 +1,42 @@
+SQL> set echo on
+SQL> Select* from Painter;
+
+   P# Last name       First name      PAINTER_ORIGIN            PAINTER_DOB
+----- --------------- --------------- ------------------------- -----------
+  123 Vecelli         Titian          Italy                     01-JAN-85  
+  126 O'Keeffe        Georgia         United States             15-NOV-87  
+  130 Van Gogh        Vincent         Netherlands               30-MAR-53  
+  133 van Rijn        Rembrandt       Netherlands               15-JUL-06  
+  136 Picasso         Pablo           Spain                     25-OCT-81  
+  139 Monet           Claude          France                    14-NOV-40  
+  142 Warhol          Andy            United States             06-AUG-28  
+  145 Renior          Pierre-Auguste  France                    25-FEB-41  
+  146 da Vinci        Leonardo        Italy                     15-APR-52  
+  148 di Lodovico Buo Michelangelo    Italy                     06-MAR-75  
+
+ 10 rows selected 
+
+SQL> Select* from painting;
+
+Painting# Title                PAINTING_VALUE    P#
+--------- -------------------- -------------- -----
+       10 Mona Lisa              $700,000,000   146
+       20 Portrait of Marten S       $201,833   133
+       30 Salvator Mundi         $450,300,000   146
+       40 Les Femmes d'Alger     $187,000,000   136
+       50 The Dream              $155,000,000   136
+       60 Eight Elvises          $100,000,000   142
+       70 Diana and Actaeon       $91,000,000   123
+       80 Portrait of Doctor G    $82,500,000   130
+       90 Le bassin aux nymphe    $80,600,000   139
+      100 Le moulin de la Gale    $78,100,000   145
+      110 Self-portrait with b    $90,000,000   130
+      120 The Last Supper                  $0   146
+      130 the Starry Night                 $0   130
+      140 Creation of Adam                 $0   148
+      150 Water Lilies                     $0   139
+      160 The Night Watch                  $0   133
+
+ 16 rows selected 
+
+SQL> Spool off;

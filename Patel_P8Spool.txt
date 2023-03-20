@@ -1,0 +1,455 @@
+SQL> set echo on
+SQL> set echo off
+SQL> -------------------------------------------------------------
+SQL> TTITLE LEFT '**Query 1 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select count(MemberNo) as "MemberNo"
+from Member;
+
+**Query 1 **    Page  1                                                               
+                                                                                      
+  MemberNo
+----------
+        72
+
+SQL> Insert into member (MemberNo, mbrFirstName, mbrLastName, MbrStreet, MbrCity, MbrState, MbrZip, MbrPhoneNo, PlanID, mbrEmail, MbrDateEffective, EmployerID)
+Values (99, 'Abhi', 'Patel', '3921 Leroy Lane', 'Pikeville', 'OH','41501', '9153608888',  '7', 'ta2b2pdozdl@gmail.com', '5-NOV-2021', '2');
+
+1 row inserted.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> Select count(MemberNo) as "MemberNo"
+from Member;
+
+**Query 1 **    Page  1                                                               
+                                                                                      
+  MemberNo
+----------
+        73
+
+SQL> set echo off
+SQL> -------------------------------------------------------------
+SQL> TTITLE LEFT '**Query 2 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select mbrLastName ||', '|| MbrFirstName as "MbrName", Substr(MbrPhoneNo,1,3) as "AreaCode", substr(MbrPhoneNo,4,7) As "MBRPhone"
+from Member
+Where Substr(MbrPhoneNo,1,3) = 915
+Order by MbrLastName;
+
+**Query 2 **    Page  1                                                               
+                                                                                      
+MbrName     AreaCode MBRPhone
+----------- -------- --------
+Patel, Abhi 915      3608888 
+Randolph, D 915      6997345 
+Sharman, De 915      7948546 
+Shue, Marga 915      5200297 
+Wu, Tan     915      6973993 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 3 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Update Agent 
+Set AgentTitle = 'Sales Rep'
+Where AgentTitle = 'Salesman';
+
+0 rows updated.
+
+SQL> Select AgentID, AgentFname, AgentLname, AgentPhone, AGENTUPERID, AgentTitle
+From Agent
+ORder by AgentLname asc;
+
+**Query 3 **    Page  1                                                               
+                                                                                      
+Agent AgentFname AgentLname AgentPhone    AgentSid Agenttitle
+----- ---------- ---------- ------------- -------- ----------
+AA020 Adam       Akerson    (440)123-1111 JR010    Sales Rep 
+BA550 Bill       Almes      (915)222-9999 JR010    Sales Rep 
+RB001 Ron        Bell       (419)841-1189          President 
+TM220 Tom        Matthews   (704)377-2266 JR990    Regional M
+LR020 Lauren     Renard     (419)290-1677 AA020    Intern    
+JR010 Jordan     Richards   (419)222-1212 JR990    District M
+JR990 John       Robie      (419)841-1188          VP Sales  
+
+ 7 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 4 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select MbrFirstname as "Fname", MbrLastname  as "Lname", MbrEmail, 'Member' as "ctype"
+ 
+From Member
+Where mbrState = 'OH'
+Union
+Select EmplContactFirstName as "Fname", EmplcontactLastname  as "Lname", EmplcontactEmail,  'Employer' as "ctype"
+from Employer
+Where emplState = 'OH'
+Union
+Select CarContactFirstName as "Fname", CarContactLastName   as "Lname", CarEmail,  'Carrier' as "ctype" 
+From Carrier
+Where CarStCode = 'OH'
+
+Order by "Lname";
+
+**Query 4 **    Page  1                                                               
+                                                                                      
+Fname Lname MbrEmail                  C-type   
+----- ----- ------------------------- ----------
+Ann   Baile abailey@bcbs.com          Carrier   
+Sara  Dixon sdixon11@ameblo.jp        Member    
+Nick  Jacio jacione.nick@nationwide.c Carrier   
+Jack  James jj33@yahoo.com            Employer  
+Abhi  Patel ta2b2pdozdl@gmail.com     Member    
+Ernes Stewa estewarts@hibu.com        Member    
+
+ 6 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 5 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select CarStCode as "plState" from Carrier 
+intersect 
+Select EmplState as "plState" from Employer
+order by "plState";
+
+**Query 5 **    Page  1                                                               
+                                                                                      
+plState
+-------
+MA     
+OH     
+PA     
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 6 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select emplstate as "plState" from employer 
+Where emplstate in(select CarStCode as "State" from Carrier)
+Order by "plState";
+
+**Query 6 **    Page  1                                                               
+                                                                                      
+plState
+-------
+MA     
+OH     
+PA     
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 7 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select CarrierID, Carname from Carrier
+Minus 
+Select CarrierId, carname from PLAN natural join carrier
+order by carname;
+
+**Query 7 **    Page  1                                                               
+                                                                                      
+CarrierID  Carname       
+---------- ---------------
+PHC        Paramount Healt
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 8 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select CarrierID, Carname, Carwebsite
+from carrier 
+Where carrierid in (select plan.carrierid from plan)
+order by carname;
+
+**Query 8 **    Page  1                                                               
+                                                                                      
+CarrierID  Carname         CarWeb              
+---------- --------------- ---------------------
+ANTH       Anthem          www.athem.org        
+BCBS       Blue Cross Blue www.bcbs.com         
+DLT        Delta Dental    www.deltadental.com  
+MM         Medical Mutual  www.medicalmutual.com
+NWD        Nationwide      www.nationwide.com   
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 9 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select plan.planid, plndescription, plncost, count(memberNO) as "MemberNo"
+from plan left join member on plan.planid = member.planid
+group by plan.planid, plndescription, plncost
+order by plan.planid;
+
+**Query 9 **    Page  1                                                               
+                                                                                      
+      PlanID PlnDesc Plncost   MemberNo
+------------ ------- ------- ----------
+           1 Single     $125          9
+           2 2-Party    $240         15
+           3 Family     $285         11
+           4 Single     $160          6
+           5 2-Party    $275          4
+           6 Family     $350          7
+           7 Single      $85          6
+           8 Family     $190          0
+           9 Life On     $26          2
+          10 Single     $185          5
+          11 2-Party    $320          0
+          12 Family     $425          2
+
+ 12 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 10 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> select plan.planid, plndescription, plncost, count(memberNO) as "MemberNo"
+from plan full outer join member on plan.planid = member.planid
+group by plan.planid, plndescription, plncost
+order by planid;
+
+**Query 10 **    Page  1                                                              
+                                                                                      
+      PlanID PlnDesc Plncost   MemberNo
+------------ ------- ------- ----------
+           1 Single     $125          9
+           2 2-Party    $240         15
+           3 Family     $285         11
+           4 Single     $160          6
+           5 2-Party    $275          4
+           6 Family     $350          7
+           7 Single      $85          6
+           8 Family     $190          0
+           9 Life On     $26          2
+          10 Single     $185          5
+          11 2-Party    $320          0
+          12 Family     $425          2
+                                      6
+
+ 13 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 11 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> select planid, plndescription, plncost, (select AVG(PLNCOST) from plan) as "Planavg"
+From plan
+group by planid, plndescription, plncost
+having sum(plncost) > (select avg(plncost) from plan)
+order by PlanId;
+
+**Query 11 **    Page  1                                                              
+                                                                                      
+      PlanID PlnDesc Plncost   PlanAvg
+------------ ------- ------- ---------
+           2 2-Party    $240  $222.125
+           3 Family     $285  $222.125
+           5 2-Party    $275  $222.125
+           6 Family     $350  $222.125
+          11 2-Party    $320  $222.125
+          12 Family     $425  $222.125
+
+ 6 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 12 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select Agent.AgentID, AgentFname, AgentLname, Count(distinct employer.EmployerId) as "EMPCNT", Count(Member.MemberNo) as "MEMCNT"
+From Agent left join employer on employer.AGENTID = Agent.AGENTID 
+left join Member on Member.EmployerId = Employer.EmployerID
+
+group by Agent.AgentID, AgentFname, AgentLname
+order by Agent.AgentID;
+
+**Query 12 **    Page  1                                                              
+                                                                                      
+Agent AgentFname AgentLname EmpCnt MemCnt
+----- ---------- ---------- ------ ------
+AA020 Adam       Akerson         1      1
+BA550 Bill       Almes           0      0
+JR010 Jordan     Richards        3     26
+JR990 John       Robie           3     19
+LR020 Lauren     Renard          1      9
+RB001 Ron        Bell            1     11
+TM220 Tom        Matthews        2      6
+
+ 7 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 13 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select * from PatelView13;
+
+**Query 13 **    Page  1                                                              
+                                                                                      
+EmplName EmplFname EmplLname       PlanID PlnDesc   MemberNo Plncost MbrCnt
+-------- --------- --------- ------------ ------- ---------- ------- ------
+Babblese Larry     Spencer              3 Family           2    $285    570
+Babblese Larry     Spencer              6 Family           2    $350    700
+Babblese Larry     Spencer             10 Single           1    $185    185
+Bakertim Martin    Jackson              1 Single           3    $125    375
+Bakertim Martin    Jackson              2 2-Party          3    $240    720
+Bakertim Martin    Jackson              3 Family           1    $285    285
+Bakertim Martin    Jackson              4 Single           1    $160    160
+Bakertim Martin    Jackson              5 2-Party          1    $275    275
+Bakertim Martin    Jackson             12 Family           1    $425    425
+Fair Wea John      Adams                1 Single           2    $125    250
+Fair Wea John      Adams                2 2-Party          5    $240   1200
+Fair Wea John      Adams                3 Family           1    $285    285
+Fair Wea John      Adams                4 Single           1    $160    160
+Fair Wea John      Adams                6 Family           1    $350    350
+Fair Wea John      Adams                7 Single           1     $85     85
+Fair Wea John      Adams                9 Life On          1     $26   25.5
+Fair Wea John      Adams               10 Single           1    $185    185
+Fair Wea John      Adams               12 Family           1    $425    425
+Halston  Julie     Reynolds             4 Single           3    $160    480
+Halston  Julie     Reynolds             5 2-Party          1    $275    275
+Halston  Julie     Reynolds            10 Single           1    $185    185
+Kwimbee  Lillian   Snyder               9 Life On          1     $26   25.5
+MMB Hold Jack      James                1 Single           2    $125    250
+MMB Hold Jack      James                2 2-Party          2    $240    480
+MMB Hold Jack      James                5 2-Party          1    $275    275
+MMB Hold Jack      James                6 Family           1    $350    350
+Segal    Mark      Stark                1 Single           1    $125    125
+Segal    Mark      Stark                2 2-Party          1    $240    240
+Segal    Mark      Stark                3 Family           5    $285   1425
+Segal    Mark      Stark                4 Single           1    $160    160
+Segal    Mark      Stark                5 2-Party          1    $275    275
+Segal    Mark      Stark                7 Single           1     $85     85
+Skalith  Jonathan  Graham               7 Single           2     $85    170
+Skidoo   Shirley   Kennedy              6 Family           1    $350    350
+Twittern Judith    Martinez             6 Family           1    $350    350
+
+**Query 13 **    Page  2                                                              
+                                                                                      
+EmplName EmplFname EmplLname       PlanID PlnDesc   MemberNo Plncost MbrCnt
+-------- --------- --------- ------------ ------- ---------- ------- ------
+Twittern Judith    Martinez             7 Single           2     $85    170
+WardCo   Paul      Tinnion              1 Single           1    $125    125
+WardCo   Paul      Tinnion              2 2-Party          4    $240    960
+WardCo   Paul      Tinnion              3 Family           2    $285    570
+WardCo   Paul      Tinnion              6 Family           1    $350    350
+WardCo   Paul      Tinnion             10 Single           1    $185    185
+                                        8 Family           0    $190      0
+                                       10 Single           1    $185    185
+                                       11 2-Party          0    $320      0
+
+ 44 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 14 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select carrier.carrierId, CarName, plan.PlanID, PlnDescription, Count(memberNo) as "MemberNo", count(plan.planid) as "PlanCNT", (Count(memberNo) / count(carrier.carrierid) * 100 ) as "PCT"
+
+From Carrier Left Join Plan on Carrier.CarrierID = Plan.CarrierID 
+Left Join Member on plan.PlanId = member.PlanID
+
+
+Group by  carrier.carrierId, CarName, plan.PlanID, PlnDescription
+
+order by carrier.CarrierID, plan.planID;
+
+**Query 14 **    Page  1                                                              
+                                                                                      
+CarrierID  Carname               PlanID PlnDesc   MemberNo PlanCnt PCT
+---------- --------------- ------------ ------- ---------- ------- ---
+ANTH       Anthem                     4 Single           6       6 100
+ANTH       Anthem                     5 2-Party          4       4 100
+ANTH       Anthem                     6 Family           7       7 100
+BCBS       Blue Cross Blue            1 Single           9       9 100
+BCBS       Blue Cross Blue            2 2-Party         15      15 100
+BCBS       Blue Cross Blue            3 Family          11      11 100
+DLT        Delta Dental               7 Single           6       6 100
+DLT        Delta Dental               8 Family           0       1   0
+MM         Medical Mutual            10 Single           5       5 100
+MM         Medical Mutual            11 2-Party          0       1   0
+MM         Medical Mutual            12 Family           2       2 100
+NWD        Nationwide                 9 Life On          2       2 100
+PHC        Paramount Healt                               0       0   0
+
+ 13 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 15 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select emplName, Count(Distinct MemberNo) as "emCnt", Count(distinct Planid) as "PlnCount", count(distinct carrierID) as "CarCnt"
+from employer natural join member natural join plan natural join carrier
+group by emplname
+order by emplname;
+
+**Query 15 **    Page  1                                                              
+                                                                                      
+EmplName EmCnt PlnCou CarCnt
+-------- ----- ------ ------
+Babblese     5      3      3
+Bakertim    10      6      3
+Fair Wea    14      9      5
+Halston      5      3      2
+Kwimbee      1      1      1
+MMB Hold     6      4      2
+Segal       10      6      3
+Skalith      2      1      1
+Skidoo       1      1      1
+Twittern     3      2      2
+WardCo       9      5      3
+
+ 11 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> TTITLE LEFT '**Query 16 **    Page' Format 99 sql.pno skip 1
+SQL> set echo on
+SQL> --***********************************************************
+SQL> Select carrier.CarrierID, CarName, PlanId, PLndescription, plncost, Avg(Plncost) as "CARAVGPLN", (select Avg(plncost) from plan) as "AVGPLN"
+from carrier left join plan on carrier.carrierID = plan.CarrierID
+group by carrier.CarrierID, CarName, PlanId, PLndescription, plncost
+order by PlanID;
+
+**Query 16 **    Page  1                                                              
+                                                                                      
+CarrierID  Carname               PlanID PlnDesc Plncost Caravgpln Avgpln
+---------- --------------- ------------ ------- ------- --------- ------
+BCBS       Blue Cross Blue            1 Single     $125      $125   $222
+BCBS       Blue Cross Blue            2 2-Party    $240      $240   $222
+BCBS       Blue Cross Blue            3 Family     $285      $285   $222
+ANTH       Anthem                     4 Single     $160      $160   $222
+ANTH       Anthem                     5 2-Party    $275      $275   $222
+ANTH       Anthem                     6 Family     $350      $350   $222
+DLT        Delta Dental               7 Single      $85       $85   $222
+DLT        Delta Dental               8 Family     $190      $190   $222
+NWD        Nationwide                 9 Life On     $26       $26   $222
+MM         Medical Mutual            10 Single     $185      $185   $222
+MM         Medical Mutual            11 2-Party    $320      $320   $222
+MM         Medical Mutual            12 Family     $425      $425   $222
+PHC        Paramount Healt                                          $222
+
+ 13 rows selected 
+
+SQL> set echo off
+SQL> ----------------------------------------------------
+SQL> ----------------------------------------------------
+SQL> SPOOL OFF

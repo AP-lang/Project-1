@@ -1,0 +1,347 @@
+Set Environment
+set echo off
+set linesize 86
+set pagesize 40
+
+--column formatting
+CLEAR COLUMNS;
+COLUMN mem_num              Heading 'MEMNumber'          Format A10 trunc   
+COLUMN mem_Fname            Heading 'MEMFirstName'       Format A12 trunc
+COLUMN mem_Lname            Heading 'MEMLastName'        Format A11 trunc
+COLUMN mem_Street           Heading 'Street'             Format A12 trunc
+COLUMN mem_City             Heading 'City'               Format A12 trunc
+COLUMN mem_State            Heading 'State'              Format A5 trunc
+COLUMN mem_ZIP              Heading 'Zip'                Format A12 trunc
+COLUMN mem_Balance          Heading 'Balance'            Format $99,999,999
+COLUMN Detail_Fee           Heading 'Fee'                format $99,999,999
+COLUMN Detail_DueDate       Heading 'Due Date'                    
+COLUMN Detail_ReturnDate    Heading 'Return Date'		
+COLUMN Detail_DailyLateFee  Heading 'Daily Late Fee'         format $9
+COLUMN Rent_Num             Heading 'RentNumber'             Format A10 Trunc    
+COLUMN Vid_Num              Heading 'Video Number'           Format A15 Trunc
+COLUMN Price_Code           Heading 'Price Code'             Format A10 trunc
+COLUMN Price_Description    Heading 'Price Description'
+COLUMN Price_rentfee        Heading 'Rent Fee'		        format $99,999,999
+COLUMN Price_DailyLateFee   Heading 'DailyLateFee' 	      format $99
+COLUMN Movie_Num            Heading 'Movie Number'        Format A13 trunc
+COLUMN Movie_Title          Heading 'Movie Title'            Format A20 trunc
+COLUMN Movie_Year           Heading 'Movie Year'           Format A10 trunc
+COLUMN Movie_Cost           Heading 'Movie cost'		       format $99,999,999
+COLUMN Movie_Genre          Heading 'MovieGenre'          Format A12 trunc
+COLUMN RENT_DATE           Heading 'Rent Date'    
+Column Movie.Movie_Num     Heading 'Movie Number'         Format A10 trunc
+column Detail_DailyLateFee Heading 'DailyLateFee'          Format A12 trunc
+Column rental.Rent_num      Heading 'RentNumber'          Format A5 trunc
+------------------- Calculated Columns
+Column RentalCount         Heading 'Rental Count'         Format A12 Trunc
+Column AvgBalance           Heading 'Avg Balance'         Format A11 Trunc
+Column CountMems            Heading 'Count Members'       Format A14 trunc
+Column MovieCount           Heading 'Count Movies'        Format A13 trunc
+Column AVGMovieCost         Heading 'Avg Movie Cost'      format $999.99
+Column VideoCount           Heading 'Count Video'         Format A13 trunc
+Column RentCount            Heading 'Count Rent'          Format A15 trunc
+Column MovieCost            Heading 'Movie Cost'          Format A11 trunc
+Column MinCost              Heading 'Min Cost'            format $99,999,999
+Column MaxCost              Heading 'Max Cost'            format $99,999,999
+Column AvgMovieCost         Heading 'Avg Movie Cost'      format $99,999,999
+Column DetailFee            Heading 'Detail Fee'          format $99,999,999
+Column DaysLate             Heading 'DaysLate'            Format A8 trunc
+Column LateCharges          Heading 'LateCharge'          format $99
+Column TotalFees            Heading 'Total Fees'          format $99,999,999
+Column CountRent            Heading 'CountRent'           format A9 trunc
+Column CountGenre           Heading 'CountGenre'         format A10 trunc 
+
+SPOOL x:\Patel_P7Spool.txt
+
+set echo on;
+
+set echo off;
+-------------------------------------------------------------
+TTITLE LEFT '**Query 1 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+--***********************************************************
+Select Mem_num as "Member Number", Mem_Fname, Mem_Lname, Rent_Num as "Rent Number", Rent_Date as "Rent Date"
+From Membership natural join Rental
+Where (Rent_Date >= '8-OCT-19') and (Rent_date <= '15-OCT-19') 
+Order by Rent_Num;
+
+
+
+
+
+set echo off;
+-------------------------------------------------------------
+TTITLE LEFT '**Query 2 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Movie.Movie_num, Movie_Title, Vid_num
+From Movie right join Video on Movie.MOVIE_NUM = Video.MOVIE_NUM
+Where vid_indate is null
+order by movie_Title, Vid_num;
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 3 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select DISTINCT Mem_State
+From Membership
+Order by Mem_State;
+
+
+
+set echo off;
+----------------------------------------------------
+
+TTITLE LEFT '**Query 4 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Movie_num, Movie_title, Movie_Cost, Movie_Genre, Price_code, Movie_Year
+from Movie
+Where Movie_cost > 20 and MOVIE_GENRE in ('COMEDY', 'FAMILY', 'DRAMA') and price_code is not null
+Order by Movie_genre, Movie_title;
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 5 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Movie_Title, Movie_Genre, Movie_Year, Movie_cost
+From Movie 
+Where Movie_Title LIKE '%Hustler%'
+Order by Movie_title ASC;
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 6 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Mem_num, Mem_Fname, Mem_Lname, Count(rent_num) as "RentalCount"
+from membership natural join Rental
+group by Mem_num, Mem_Fname, Mem_Lname
+order by Mem_num;
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 7 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Membership.Mem_num, Mem_Fname, Mem_Lname, Count(rent_num) as "RentalCount"
+from membership left join Rental on Membership.Mem_num = Rental.Mem_num
+group by Membership.Mem_num, Mem_Fname, Mem_Lname
+order by Membership.Mem_num;
+
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 8 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Membership.mem_num, Mem_Fname, Mem_Lname
+from Membership left Join Rental on Membership.Mem_num = Rental.Mem_num
+Where Rent_num is null
+Order by Mem_Lname;
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 9 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select count(mem_num) as "CountMems", round(avg(mem_balance),2) as "AvgBalance"
+From membership;
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 10 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select movie_genre, count(movie_num) as "MovieCount", round(avg(Movie_cost),2) as "AVGMovieCost"
+From movie
+Group by Movie_genre
+order by Movie_genre;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 11 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Movie_Genre, Count(Vid_num) as "VideoCount"
+from Movie natural join Video
+group by Movie_genre
+order by Movie_Genre;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 12 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Movie_genre, Count(Rent_num) as "RentCount"
+from Movie natural join video left join DetailRental on Video.Vid_num = DetailRental.Vid_num
+group by Movie_genre
+order by Movie_genre;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 13 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select count(Movie_num) as "moviecount" , Sum(Movie_cost) as "MovieCost", Avg(movie_cost) as "AvgMovieCost", min(movie_cost) as "MinCost", Max(Movie_cost) as "MaxCost"
+from movie;
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 14 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select Mem_num, Mem_Fname, Mem_Lname, Sum(Detail_Fee) as "DetailFee"
+From membership natural join Rental inner join detailRental on Rental.Rent_Num = DetailRental.Rent_Num
+Group by mem_num, Mem_Fname, Mem_Lname
+order by sum(detail_Fee) desc;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 15 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select  Mem_num, Mem_Fname,  Mem_Lname,  rental.Rent_num, Detail_DailyLateFee, (Detail_ReturnDate - Detail_DueDate ) as "DaysLate", ( Detail_ReturnDate - Detail_DueDate ) * (Detail_DailyLateFee) as "LateCharges"
+From membership  natural join Rental left outer join detailRental on Rental.Rent_Num = DetailRental.Rent_Num
+Where (Detail_ReturnDate - Detail_DueDate ) is not null and (Detail_DueDate - Detail_ReturnDate) < 0
+group by Mem_num, Mem_Fname, Mem_Lname, Rental.Rent_num, Detail_DailyLateFee, Detail_ReturnDate, Detail_DueDate
+order by Mem_Lname asc, Rent_num asc;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 16 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+
+Select mem_num, Mem_fname, mem_lname, count(Vid_num) as "VideoCount"
+from membership natural join rental natural join DetailRental natural join video 
+having count(Vid_num) > 6
+group by mem_num, Mem_fname, mem_lname
+
+order by  count(vid_num) desc;
+
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 17 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select price_code, Price_description, Movie_Genre, sum(Detail_fee)as "TotalFees"
+From movie natural join Video natural join DetailRental natural join Price
+where Price_code in ('1' , '2')
+having sum(Detail_fee) > 20
+group by Price_code, Price_description, Movie_genre
+order by price_code, Movie_genre; 
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+TTITLE LEFT '**Query 18 **    Page' Format 99 sql.pno skip 1;
+set echo on;
+
+--***********************************************************
+Select mem_num, Mem_fname, mem_lname, count( distinct Rent_date) as "CountRent", count(vid_num) as "VideoCount", Count( distinct Movie_genre) as "CountGenre"
+from membership natural join rental natural join DetailRental natural join video natural join Movie
+group by mem_num, Mem_fname, mem_lname
+order by mem_lname;
+
+
+
+
+
+
+set echo off;
+----------------------------------------------------
+----------------------------------------------------
+
+SPOOL OFF
+TTITLE OFF
+CLEAR COLUMNS
